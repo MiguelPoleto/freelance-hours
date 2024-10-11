@@ -3,6 +3,9 @@
 namespace App\Livewire\Proposals;
 
 use App\Models\Project;
+use App\Models\Proposal;
+use App\Actions\arrangePositions;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -32,14 +35,23 @@ class Create extends Component
 
         $this->validate();
 
+        DB::transaction(function(){
 
-        $this->project->proposals()
+            $proposal = $this->project->proposals()
         
-        ->updateOrCreate(
+            ->updateOrCreate(
             
             ['email' => $this->email],
             ['hours' => $this->hours],
         );
+
+        $this->arrangePositions($proposal);
+
+        });
+
+
+
+
 
 
         $this->dispatch('proposal::created');
@@ -47,6 +59,31 @@ class Create extends Component
         $this->modal = false;
 
     }
+
+    public function arrangePositions(Proposal $proposal)
+    {
+
+        $query = DB::select(
+            "select *, row_number() over (order by hours asc) as newPosition
+            from proposals
+            where project_id = :project
+        ", ['project'=> $proposal->project_id]);
+
+        $position = collect($query)->where('id', '=', $proposal->id)->first();
+        $otherProposal = collect($query)->where('position', '=', $position->newPosition)->first();
+
+
+        if($otherProposal){
+            $proposal->update(['position_status' => 'up']);
+            Proposal::query()->where('id', '=', $otherProposal->id)->update(['position_status' => 'down']);
+        }
+
+        arrangePositions::run($proposal->project_id);
+
+    }
+
+
+    
 
 
     public function render()
