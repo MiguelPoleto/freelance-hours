@@ -76,7 +76,11 @@ Acesse a aplicação em `http://localhost:8000`
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests para melhorias e correções.
 
-## Licença
+## Contato
 
-O Freelance Hours é um software de código aberto licenciado sob a [licença MIT](LICENSE).
+Caso tenha dúvidas ou sugestões, entre em contato:
+- GitHub: [MiguelPoleto](https://github.com/MiguelPoleto)
+- LinkedIn: [miguelpoleto](https://www.linkedin.com/in/miguelpoleto/)
+- E-mail: *miguelpoleto5@gmail.com*
+- Instagram: [@miguelsantuchi](https://www.instagram.com/miguelsantuchi/)
 
